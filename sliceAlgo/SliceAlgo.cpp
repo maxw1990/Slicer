@@ -58,15 +58,15 @@ SlicerAlgo::SlicerAlgo(float height, float sliceHeight, std::vector<Geometry::Tr
 bool SlicerAlgo::run()
 {
     fpng::fpng_init();
-    Geometry::PixelArray array(1080, std::vector<uint8_t>(1920, 0));
     ActiveObject threadObject;
     std::unique_ptr<Message> msg1 = std::make_unique<PrintMessage>(PrintMessage("start Printing images"));
     threadObject.send(std::move(msg1));
     Geometry::Plane p = Geometry::Plane(Geometry::Vector(0, 0, 1)); // z axis
     float objektHeigth = this->objHeight;                           // in mm
     int counter = 0;
-    for (float cutterHeight = -1.f; cutterHeight < objektHeigth; cutterHeight += 1)
+    for (float cutterHeight = -1.f; cutterHeight < objektHeigth; cutterHeight += 0.2f)
     {
+        Geometry::PixelArray array(1080, std::vector<uint8_t>(1920, 0));
         p.setDistance(cutterHeight + sliceHeight / 2.0f);
         std::vector<Geometry::Vector> intersectionPoints;
         Geometry::Vector planePos = p.getNormal().multiply(p.getDistance());
