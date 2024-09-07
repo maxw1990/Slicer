@@ -13,7 +13,7 @@ public:
     ActiveObject();
     ~ActiveObject();
     // Nachricht senden
-    void send(std::shared_ptr<Message> msg);
+    void send(std::unique_ptr<Message> msg);
 
     // Aktives Objekt beenden
     void WaitAndStop();
@@ -25,7 +25,7 @@ public:
 private:
     void run();
     std::thread thread;
-    std::queue<std::shared_ptr<Message>> messages;
+    std::queue<std::unique_ptr<Message>> messages;
     std::mutex mutex;
     std::condition_variable condition;
     std::atomic_bool running;

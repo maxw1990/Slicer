@@ -60,13 +60,13 @@ bool SlicerAlgo::run()
     fpng::fpng_init();
     Geometry::PixelArray array(1080, std::vector<uint8_t>(1920, 0));
     ActiveObject threadObject;
-    threadObject.send(std::make_shared<PrintMessage>(PrintMessage("start Printing images")));
+    std::unique_ptr<Message> msg1 = std::make_unique<PrintMessage>(PrintMessage("start Printing images"));
+    threadObject.send(std::move(msg1));
     Geometry::Plane p = Geometry::Plane(Geometry::Vector(0, 0, 1)); // z axis
     float objektHeigth = this->objHeight;                           // in mm
     int counter = 0;
     for (float cutterHeight = -1.f; cutterHeight < objektHeigth; cutterHeight += 1)
     {
-
         p.setDistance(cutterHeight + sliceHeight / 2.0f);
         std::vector<Geometry::Vector> intersectionPoints;
         Geometry::Vector planePos = p.getNormal().multiply(p.getDistance());
@@ -99,8 +99,8 @@ bool SlicerAlgo::run()
         // std::vector<Geometry::Contour> polygonArrays;
         contourGen::createImageFromContours(array, polygonArrays);
         const void *pImage = Geometry::convertMatrixToImage(array, 1920, 1080);
-        auto msg = std::make_shared<SavePng>(SavePng(pImage, cutterHeight,m_outputImagePath));
-        threadObject.send(msg);
+        std::unique_ptr<Message> msg = std::make_unique<SavePng>(SavePng(pImage, cutterHeight,m_outputImagePath));
+        threadObject.send(std::move(msg));
         counter++;
     };
     threadObject.WaitAndStop();

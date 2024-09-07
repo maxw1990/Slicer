@@ -60,11 +60,11 @@ ActiveObject::~ActiveObject()
 };
 
 // send message
-void ActiveObject::send(std::shared_ptr<Message> msg)
+void ActiveObject::send(std::unique_ptr<Message> msg)
 {
     std::lock_guard<std::mutex> lock(mutex);
     active = true;
-    messages.push(msg);
+    messages.push(std::move(msg));
     condition.notify_one();
 }
 
@@ -150,13 +150,13 @@ void ActiveObject::run()
         if (!running)
             break;
 
-        std::shared_ptr<Message> msg = messages.front();
+        std::unique_ptr<Message> msg = std::move(messages.front());
         messages.pop();
         lock.unlock();
         // Nachricht verarbeiten
         TaskHelper::tryAndCatch(running,
                                 *this,
-                                [msg]()
+                                [&msg]()
                                 {
                                     return msg->execute();
                                 });
