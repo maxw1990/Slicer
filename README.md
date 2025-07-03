@@ -1,6 +1,6 @@
 # Slicer
 
-3D stl slicer in c++
+3D stl slicer in c++. Prototyp.
 
 ## TODO
 

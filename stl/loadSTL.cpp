@@ -2,7 +2,6 @@
 #include "geometry/Geometry.h"
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <array>
 #include <sstream>
 
