@@ -8,6 +8,41 @@
 namespace Geometry
 {
 
+// ---------- Simple Matrix ----------
+struct Matrix
+{
+    int width, height;
+    std::vector<float> data;
+    Matrix(int w, int h) : width(w), height(h), data(w * h, 0.f) {}
+    float &GetFastRef(int x, int y) { return data[y * width + x]; }
+    int Width() const { return width; }
+    int Height() const { return height; }
+    std::vector<std::vector<uint8_t>> ToByteMatrix(float gamma = 1.0f, bool applyGamma = false ) const{
+        std::vector<std::vector<uint8_t>> result(height, std::vector<uint8_t>(width));
+        for (int y = 0; y < height; ++y)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                float v = data[y * width + x];
+                // Clamp to [0,1]
+                v = std::max(0.f, std::min(1.f, v));
+                // Optional gamma correction
+                if (applyGamma && gamma != 1.0f)
+                    v = std::pow(v, gamma);
+                // + 0.5f for rounding to nearest integer
+                result[y][x] = static_cast<uint8_t>(v * 255.0f + 0.5f);
+            }
+        }
+        return result;
+    }
+};
+
+// ---------- Helpers ----------
+struct RectInt
+{
+    int left, right, top, bottom;
+};
+
 class Vector{
     public:
         Vector(float x,float y, float z);

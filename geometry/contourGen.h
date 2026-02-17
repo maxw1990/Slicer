@@ -22,7 +22,7 @@ namespace contourGen
 
     void scaleContour(Geometry::Contour &points, float scaleX, float scaleY);
 
-    void createImageFromContours(Geometry::PixelArray &array, std::vector<Geometry::Contour> &contour);
+    void createImageFromContours(Geometry::Matrix &array, std::vector<Geometry::Contour> &contour);
 
 } // namespace contourGen
 

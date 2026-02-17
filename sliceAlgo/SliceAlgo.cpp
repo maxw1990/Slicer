@@ -66,7 +66,6 @@ bool SlicerAlgo::run()
     int counter = 0;
     for (float cutterHeight = -1.f; cutterHeight < objektHeigth; cutterHeight += 0.2f)
     {
-        Geometry::PixelArray array(1080, std::vector<uint8_t>(1920, 0));
         p.setDistance(cutterHeight + sliceHeight / 2.0f);
         std::vector<Geometry::Vector> intersectionPoints;
         Geometry::Vector planePos = p.getNormal().multiply(p.getDistance());
@@ -96,9 +95,9 @@ bool SlicerAlgo::run()
         }
 
         auto polygonArrays = contourGen::contourConstruction(polyLines);
-        // std::vector<Geometry::Contour> polygonArrays;
+        Geometry::Matrix array(1920, 1080);
         contourGen::createImageFromContours(array, polygonArrays);
-        const void *pImage = Geometry::convertMatrixToImage(array, 1920, 1080);
+        const void *pImage = Geometry::convertMatrixToImage(array.ToByteMatrix(1.0f), 1920, 1080);
         std::unique_ptr<Message> msg = std::make_unique<SavePng>(SavePng(pImage, cutterHeight,m_outputImagePath));
         threadObject.send(std::move(msg));
         counter++;

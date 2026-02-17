@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/MyProject",
-            "args": ["/Users/maxwerner/Documents/slicer_git/Slicer/Spectacular_Rottis-Bruticus(1).stl"],
+            "args": ["${workspaceFolder}/Spectacular_Rottis-Bruticus.stl"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
